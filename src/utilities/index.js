@@ -1,9 +1,9 @@
 const axios = require('axios');
 
 export const fetch_custom = {
-  getAllTodos: () => {
+  getAllTodos: (page = 1) => {
     const result = axios
-      .get(`http://localhost:5000/todos`, {
+      .get(`http://localhost:5000/todos?${page}`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -11,6 +11,21 @@ export const fetch_custom = {
       })
       .then((data) => {
         console.log(data);
+        return data;
+      })
+      .catch((err) => console.log(err));
+    return result;
+  },
+  getSearchResults: (search) => {
+    const query = {};
+    if (search.length) {
+      query.search = search;
+    }
+
+    const result = axios
+      .get(`http://localhost:5000/todos?search=${search}`)
+      .then((data) => {
+        console.log('filtered', data);
         return data;
       })
       .catch((err) => console.log(err));
@@ -30,11 +45,11 @@ export const fetch_custom = {
       .catch((err) => console.log(err));
     return result;
   },
-  createTodo: (data) => {
+  createTodo: (content, ref) => {
     const result = axios
       .post(
         `http://localhost:5000/todos`,
-        { data: data },
+        { content: content, ref: ref },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -59,11 +74,11 @@ export const fetch_custom = {
       .catch((err) => console.log(err));
     return result;
   },
-  updateTodo: (id, data) => {
+  updateTodo: (id, content, ref) => {
     const result = axios
       .patch(
         `http://localhost:5000/todos/${id}`,
-        { data: data },
+        { content: content, ref: ref },
         {
           headers: {
             'Content-Type': 'application/json',

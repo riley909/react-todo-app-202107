@@ -8,8 +8,17 @@ function InputBox({ todoList, setTodoList }) {
   };
 
   const onClickSubmitBtn = () => {
-    const create = fetch_custom.createTodo({ content: text, ref: '' });
-    setTodoList(create);
+    fetch_custom.createTodo(text, '').then((data) => {
+      const result = data.data;
+      const addedList = todoList.concat(result);
+      setTodoList(addedList);
+    });
+
+    fetch_custom.getAllTodos().then((data) => {
+      console.log('setTodoList', data.data);
+      const result = data.data;
+      setTodoList(result);
+    });
 
     setText('');
   };
@@ -20,7 +29,7 @@ function InputBox({ todoList, setTodoList }) {
         type="text"
         name="todoItem"
         value={text}
-        placeholder="할 일을 입력해주세요"
+        placeholder="할 일을 입력하세요"
         className="inputbox-input"
         onChange={onChange}
       />
